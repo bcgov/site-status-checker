@@ -2,7 +2,7 @@
 #%
 #% HTTP Status Checker for CSV Files
 #%
-#%   Reads a CSV file of websites and outputs their statuses
+#%   Reads a CSV file of websites and outputs their statuses into results.csv
 #%
 
 # Specify halt conditions (errors, unsets, non-zero pipes), field separator and verbosity
@@ -19,52 +19,54 @@ INPUT_CSV=${1}
 #
 TIMEOUT=5
 KEYWORDS="
-200 OK
-400 Bad Request
-403 Forbidden
-404 Not Found
-Timed Out or Unreachable
+    200
+    400
+    403
+    404
+    503
+    Unavailable
 "
 
 # Temp files
 #
 TEMP_IN=/tmp/.count.sh-in.csv
-TEMP_OUT=/tmp/.count.sh-out.csv
+SAVE_OUT=./results.csv
 
 # Exclude disallowed (ftp:// and \\)
 #
-grep -vi -e "ftp://" -e "\\\\" "${INPUT_CSV}" > "${TEMP_OUT}"
+grep -vi -e "ftp://" -e "\\\\" "${INPUT_CSV}" >"${SAVE_OUT}"
 
 # Clean up input
 #
-sed -i -e 's/ht[t]p[s]\?:\/\///g' "${TEMP_OUT}"                                                   # http[s]://
-sed -i -e 's/,*$//g' "${TEMP_OUT}"                                                        # ,$ (ending commas)
-sed -i -e 's/ *(.*//g' "${TEMP_OUT}"                                                       # Notes in brackets
-sed -i -e 's/?.*//g' "${TEMP_OUT}"                                              # ?.* (trailing query strings)
-sed -i -e 's/#.*//g' "${TEMP_OUT}"                                             # #.* (trailing hash fragments)
-sed -i -e 's/\/*$//g' "${TEMP_OUT}"                                                    # /$ (trailing slashes)
+sed -i -e 's/ht[t]p[s]\?:\/\///g' "${SAVE_OUT}" # http[s]://
+sed -i -e 's/,*$//g' "${SAVE_OUT}"              # ,$ (ending commas)
+sed -i -e 's/ *(.*//g' "${SAVE_OUT}"            # Notes in brackets
+sed -i -e 's/?.*//g' "${SAVE_OUT}"              # ?.* (trailing query strings)
+sed -i -e 's/#.*//g' "${SAVE_OUT}"              # #.* (trailing hash fragments)
+sed -i -e 's/\/*$//g' "${SAVE_OUT}"             # /$ (trailing slashes)
 
 # Sort and remove duplicates
 #
-sort "${TEMP_OUT}" | uniq > "${TEMP_IN}"
+sort "${SAVE_OUT}" | uniq >"${TEMP_IN}"
 
 # Curl sites, keeping only last line of results
 #
-echo > "${TEMP_OUT}"
+echo >"${SAVE_OUT}"
 while read s; do
     echo -e "\n${s}"
     RESULT=$(curl -ILm "${TIMEOUT}" --silent "${s}" | grep HTTP)
-    [ $? -eq 0 ]|| RESULT="Timed Out or Unreachable"
-    echo "${RESULT##*$}"
-    echo "${RESULT##*$'\n'}" >> "${TEMP_OUT}"
-done < "${TEMP_IN}"
+    [ $? -eq 0 ] || RESULT="Unavailable"
+    echo "${RESULT##*$'\n'}"
+    echo "${RESULT##*$'\n'}" >>"${SAVE_OUT}"
+done <"${TEMP_IN}"
 
 # Tally results
 #
+KEYWORDS=$(echo "${KEYWORDS}" | sed 's/^[ \t]*//g')
 echo -e "\n ---\nResults"
 COUNT_TALLIED="0"
 for k in $KEYWORDS; do
-    COUNT_K=$(grep "$k" $TEMP_OUT | wc -l )
+    COUNT_K=$(grep "$k" $SAVE_OUT | wc -l)
     echo "  ${k}: ${COUNT_K}"
     COUNT_TALLIED=$(expr ${COUNT_TALLIED} + ${COUNT_K})
 done
@@ -85,6 +87,6 @@ echo -e "\n"
 
 # Cleanup
 #
-rm "${TEMP_IN}" "${TEMP_OUT}"
+rm "${TEMP_IN}"
 
 # TODO: Pastable results
