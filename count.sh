@@ -19,7 +19,7 @@ TEMPFILE=/tmp/.count.sh-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20).csv
 
 # Vars
 #
-DEDUPE=${DEDUPE:-false}
+DEDUPE=${DEDUPE:-"false"}
 TIMEOUT=5
 KEYWORDS="
     200
@@ -43,9 +43,13 @@ sed -i -e 's/?.*//g' "${SAVE_OUT}"              # ?.* (trailing query strings)
 sed -i -e 's/#.*//g' "${SAVE_OUT}"              # #.* (trailing hash fragments)
 sed -i -e 's/\/*$//g' "${SAVE_OUT}"             # /$ (trailing slashes)
 
-# Sort and remove duplicates
+# Sort records, optionally remove duplicates
 #
-sort "${SAVE_OUT}" | uniq >"${TEMPFILE}"
+if [ "${DEDUPE}" = "true" ]; then
+    sort "${SAVE_OUT}" | uniq >"${TEMPFILE}"
+else
+    sort "${SAVE_OUT}" >"${TEMPFILE}"
+fi
 
 # Curl sites, keeping only last line of results
 #
@@ -79,7 +83,7 @@ COUNT_UNKNOWN=$((${COUNT_PROCESSED} - ${COUNT_TALLIED}))
 echo -e "\n ---\nSummary"
 echo "  Total Input: ${COUNT_INPUT_CSV}"
 echo "  Total Processed: ${COUNT_PROCESSED}"
-echo "  Excluded or Duplicated: ${COUNT_EXCLUDED}"
+echo "  Excluded: ${COUNT_EXCLUDED}"
 echo "  Total Unknown: ${COUNT_UNKNOWN}"
 echo -e "\n"
 
