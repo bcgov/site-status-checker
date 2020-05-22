@@ -14,6 +14,7 @@ IFS=$'\n\t'
 # Input, output and temp files
 #
 INPUT_CSV=${1}
+DEDUPE=${DEDUPE:-false}
 TEMP_IN=/tmp/.count.sh-in.csv
 SAVE_OUT=./results.csv
 
@@ -51,8 +52,8 @@ sort "${SAVE_OUT}" | uniq >"${TEMP_IN}"
 echo >"${SAVE_OUT}"
 while read s; do
     echo -e "\n${s}"
-    RESULT=$(curl -ILm "${TIMEOUT}" --silent "${s}" | grep HTTP) || true
-    [ $? -eq 0 ] || RESULT="Unavailable"
+    RESULT=$(curl -ILm "${TIMEOUT}" --silent "${s}" | grep HTTP) || \
+        RESULT="Unavailable"
     echo "${RESULT##*$'\n'}"
     echo "${RESULT##*$'\n'}" >>"${SAVE_OUT}"
 done <"${TEMP_IN}"
@@ -72,8 +73,8 @@ done
 #
 COUNT_INPUT_CSV=$(grep -cve '^\s*$' "${INPUT_CSV}")
 COUNT_PROCESSED=$(grep -cve '^\s*$' "${TEMP_IN}")
-COUNT_EXCLUDED=$(expr ${COUNT_INPUT_CSV} - ${COUNT_PROCESSED})
-COUNT_UNKNOWN=$(expr ${COUNT_PROCESSED} - ${COUNT_TALLIED})
+COUNT_EXCLUDED=$((${COUNT_INPUT_CSV} - ${COUNT_PROCESSED}))
+COUNT_UNKNOWN=$((${COUNT_PROCESSED} - ${COUNT_TALLIED}))
 #
 echo -e "\n ---\nSummary"
 echo "  Total Input: ${COUNT_INPUT_CSV}"
