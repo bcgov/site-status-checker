@@ -58,12 +58,16 @@ fi
 #
 echo >"${SAVE_OUT}"
 while read s; do
-    echo -e "\n${s}"
+    echo; echo "${s}"
     CLEANED=$(url_cleaner ${s})
-    RESULT=$(curl -ILm "${TIMEOUT}" --silent "${CLEANED}" | grep HTTP) || \
-        RESULT="Unavailable"
+    if [ -z "${CLEANED}" ]; then
+        RESULT="Excluded"
+    else
+        RESULT=$(curl -ILm "${TIMEOUT}" --silent "${CLEANED}" | grep HTTP) || \
+            RESULT="Unavailable"
+    fi
     echo "${RESULT##*$'\n'}"
-    echo "${RESULT##*$'\n'}" >>"${SAVE_OUT}"
+    echo "${s}, ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
 done <"${TEMPFILE}"
 
 # Tally results
