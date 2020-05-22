@@ -7,13 +7,15 @@
 
 # Specify halt conditions (errors, unsets, non-zero pipes), field separator and verbosity
 #
-# set -euo pipefail
+set -euo pipefail
 IFS=$'\n\t'
 [ ! "${VERBOSE:-}" == "true" ] || set -x
 
-# Input
+# Input, output and temp files
 #
 INPUT_CSV=${1}
+TEMP_IN=/tmp/.count.sh-in.csv
+SAVE_OUT=./results.csv
 
 # Vars
 #
@@ -26,11 +28,6 @@ KEYWORDS="
     503
     Unavailable
 "
-
-# Temp files
-#
-TEMP_IN=/tmp/.count.sh-in.csv
-SAVE_OUT=./results.csv
 
 # Exclude disallowed (ftp:// and \\)
 #
@@ -54,7 +51,7 @@ sort "${SAVE_OUT}" | uniq >"${TEMP_IN}"
 echo >"${SAVE_OUT}"
 while read s; do
     echo -e "\n${s}"
-    RESULT=$(curl -ILm "${TIMEOUT}" --silent "${s}" | grep HTTP)
+    RESULT=$(curl -ILm "${TIMEOUT}" --silent "${s}" | grep HTTP) || true
     [ $? -eq 0 ] || RESULT="Unavailable"
     echo "${RESULT##*$'\n'}"
     echo "${RESULT##*$'\n'}" >>"${SAVE_OUT}"
@@ -66,7 +63,7 @@ KEYWORDS=$(echo "${KEYWORDS}" | sed 's/^[ \t]*//g')
 echo -e "\n ---\nResults"
 COUNT_TALLIED="0"
 for k in $KEYWORDS; do
-    COUNT_K=$(grep "$k" $SAVE_OUT | wc -l)
+    COUNT_K=$(grep "$k" $SAVE_OUT | wc -l)|| true
     echo "  ${k}: ${COUNT_K}"
     COUNT_TALLIED=$(expr ${COUNT_TALLIED} + ${COUNT_K})
 done
