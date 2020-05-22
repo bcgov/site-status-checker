@@ -30,25 +30,28 @@ KEYWORDS="
     Unavailable
 "
 
-# Exclude disallowed (ftp:// and \\)
+# Function - clean up input
 #
-grep -vi -e "ftp://" -e "\\\\" "${INPUT_CSV}" >"${SAVE_OUT}"
-
-# Clean up input
-#
-sed -i -e 's/ht[t]p[s]\?:\/\///g' "${SAVE_OUT}" # http[s]://
-sed -i -e 's/,*$//g' "${SAVE_OUT}"              # ,$ (ending commas)
-sed -i -e 's/ *(.*//g' "${SAVE_OUT}"            # Notes in brackets
-sed -i -e 's/?.*//g' "${SAVE_OUT}"              # ?.* (trailing query strings)
-sed -i -e 's/#.*//g' "${SAVE_OUT}"              # #.* (trailing hash fragments)
-sed -i -e 's/\/*$//g' "${SAVE_OUT}"             # /$ (trailing slashes)
+url_cleaner() {
+    TO_RETURN=$(echo ${1} | sed \
+        -e 's/ftp:\/\/.*//g' \
+        -e 's/\\.*//g' \
+        -e 's/ht[t]p[s]\?:\/\///g' \
+        -e 's/,*$//g' \
+        -e 's/ *(.*//g' \
+        -e 's/?.*//g' \
+        -e 's/#.*//g' \
+        -e 's/\/*$//g' \
+    )
+    echo ${TO_RETURN}
+}
 
 # Sort records, optionally remove duplicates
 #
 if [ "${DEDUPE}" = "true" ]; then
-    sort "${SAVE_OUT}" | uniq >"${TEMPFILE}"
+    sort "${INPUT_CSV}" | uniq >"${TEMPFILE}"
 else
-    sort "${SAVE_OUT}" >"${TEMPFILE}"
+    sort "${INPUT_CSV}" >"${TEMPFILE}"
 fi
 
 # Curl sites, keeping only last line of results
@@ -56,7 +59,8 @@ fi
 echo >"${SAVE_OUT}"
 while read s; do
     echo -e "\n${s}"
-    RESULT=$(curl -ILm "${TIMEOUT}" --silent "${s}" | grep HTTP) || \
+    CLEANED=$(url_cleaner ${s})
+    RESULT=$(curl -ILm "${TIMEOUT}" --silent "${CLEANED}" | grep HTTP) || \
         RESULT="Unavailable"
     echo "${RESULT##*$'\n'}"
     echo "${RESULT##*$'\n'}" >>"${SAVE_OUT}"
@@ -68,9 +72,9 @@ KEYWORDS=$(echo "${KEYWORDS}" | sed 's/^[ \t]*//g')
 echo -e "\n ---\nResults"
 COUNT_TALLIED="0"
 for k in $KEYWORDS; do
-    COUNT_K=$(grep "$k" $SAVE_OUT | wc -l)|| true
-    echo "  ${k}: ${COUNT_K}"
-    COUNT_TALLIED=$(expr ${COUNT_TALLIED} + ${COUNT_K})
+    TALLY_K=$(grep "$k" $SAVE_OUT | wc -l)|| true
+    echo "  ${k}: ${TALLY_K}"
+    COUNT_TALLIED=$((${COUNT_TALLIED} + ${TALLY_K}))
 done
 
 # Summarize
@@ -90,5 +94,3 @@ echo -e "\n"
 # Cleanup
 #
 rm "${TEMPFILE}"
-
-# TODO: Pastable results
