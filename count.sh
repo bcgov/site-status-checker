@@ -14,12 +14,12 @@ IFS=$'\n\t'
 # Input, output and temp files
 #
 INPUT_CSV=${1}
-DEDUPE=${DEDUPE:-false}
-TEMP_IN=/tmp/.count.sh-in.csv
 SAVE_OUT=./results.csv
+TEMPFILE=/tmp/.count.sh-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20).csv
 
 # Vars
 #
+DEDUPE=${DEDUPE:-false}
 TIMEOUT=5
 KEYWORDS="
     200
@@ -45,7 +45,7 @@ sed -i -e 's/\/*$//g' "${SAVE_OUT}"             # /$ (trailing slashes)
 
 # Sort and remove duplicates
 #
-sort "${SAVE_OUT}" | uniq >"${TEMP_IN}"
+sort "${SAVE_OUT}" | uniq >"${TEMPFILE}"
 
 # Curl sites, keeping only last line of results
 #
@@ -56,7 +56,7 @@ while read s; do
         RESULT="Unavailable"
     echo "${RESULT##*$'\n'}"
     echo "${RESULT##*$'\n'}" >>"${SAVE_OUT}"
-done <"${TEMP_IN}"
+done <"${TEMPFILE}"
 
 # Tally results
 #
@@ -72,7 +72,7 @@ done
 # Summarize
 #
 COUNT_INPUT_CSV=$(grep -cve '^\s*$' "${INPUT_CSV}")
-COUNT_PROCESSED=$(grep -cve '^\s*$' "${TEMP_IN}")
+COUNT_PROCESSED=$(grep -cve '^\s*$' "${TEMPFILE}")
 COUNT_EXCLUDED=$((${COUNT_INPUT_CSV} - ${COUNT_PROCESSED}))
 COUNT_UNKNOWN=$((${COUNT_PROCESSED} - ${COUNT_TALLIED}))
 #
@@ -85,6 +85,6 @@ echo -e "\n"
 
 # Cleanup
 #
-rm "${TEMP_IN}"
+rm "${TEMPFILE}"
 
 # TODO: Pastable results
