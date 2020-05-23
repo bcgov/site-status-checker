@@ -29,17 +29,17 @@ KEYWORDS="
     Excluded
 "
 
-# Function - clean up input (exclude ftp, \\ and trim #, ?, /, (, etc.)
+# Function - clean up input (exclude ftp, \\ and trim ,, /, #.*, ?.*, (.*)
 #
 url_cleaner() {
     echo ${1} | sed \
-        -e 's/ftp:\/\/.*//g' \
-        -e 's/\\.*//g' \
-        -e 's/ht[t]p[s]\?:\/\///g' \
+        -e 's/^ftp:\/\/.*//g' \
+        -e 's/^\\.*//g' \
+        -e 's/^ht[t]p[s]\?:\/\///g' \
         -e 's/,*$//g' \
-        -e 's/ *(.*//g' \
-        -e 's/?.*//g' \
-        -e 's/#.*//g' \
+        -e 's/ *(.*$//g' \
+        -e 's/?.*$//g' \
+        -e 's/#.*$//g' \
         -e 's/\/*$//g'
 }
 
@@ -56,7 +56,7 @@ while read -r in; do
             RESULT="Unavailable"
     fi
     echo "${RESULT##*$'\n'}"
-    echo "${in}, ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
+    echo "${in} ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
 done <"${INPUT_CSV}"
 
 # Tally results
