@@ -11,11 +11,10 @@ set -euo pipefail
 IFS=$'\n\t'
 [ ! "${VERBOSE:-}" == "true" ] || set -x
 
-# Input, output and temp files
+# Input and output files
 #
 INPUT_CSV=${1}
 SAVE_OUT=./results.csv
-TEMPFILE=/tmp/count.sh-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20).csv
 
 # Config variables
 #
@@ -30,10 +29,10 @@ KEYWORDS="
     Excluded
 "
 
-# Function - clean up input
+# Function - clean up input (exclude ftp, \\ and trim #, ?, /, (, etc.)
 #
 url_cleaner() {
-    TO_RETURN=$(echo ${1} | sed \
+    echo ${1} | sed \
         -e 's/ftp:\/\/.*//g' \
         -e 's/\\.*//g' \
         -e 's/ht[t]p[s]\?:\/\///g' \
@@ -41,17 +40,15 @@ url_cleaner() {
         -e 's/ *(.*//g' \
         -e 's/?.*//g' \
         -e 's/#.*//g' \
-        -e 's/\/*$//g' \
-    )
-    echo ${TO_RETURN}
+        -e 's/\/*$//g'
 }
 
 # Curl sites, keeping only last line of results
 #
 echo >"${SAVE_OUT}"
-while read s; do
-    echo; echo "${s}"
-    CLEANED=$(url_cleaner ${s})
+while read -r in; do
+    echo; echo "${in}"
+    CLEANED=$(url_cleaner ${in})
     if [ -z "${CLEANED}" ]; then
         RESULT="Excluded"
     else
@@ -59,27 +56,25 @@ while read s; do
             RESULT="Unavailable"
     fi
     echo "${RESULT##*$'\n'}"
-    echo "${s}, ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
+    echo "${in}, ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
 done <"${INPUT_CSV}"
 
 # Tally results
 #
 KEYWORDS=$(echo "${KEYWORDS}" | sed 's/^[ \t]*//g')
 echo -e "\n ---\nResults"
-COUNT_TALLIED="0"
 for k in $KEYWORDS; do
-    TALLY_K=$(grep "$k" $SAVE_OUT | wc -l)|| true
-    echo "  ${k}: ${TALLY_K}"
-    COUNT_TALLIED=$((${COUNT_TALLIED} + ${TALLY_K}))
+    echo "  ${k}: $(grep "$k" $SAVE_OUT | wc -l)"
 done
 
 # Summarize
 #
 COUNT_INPUT_CSV=$(grep -cve '^\s*$' "${INPUT_CSV}")
-COUNT_UNKNOWN=$((${COUNT_INPUT_CSV} - ${COUNT_TALLIED}))
+COUNT_OUTPUT_CSV=$(grep -cve '^\s*$' "${INPUT_CSV}")
+COUNT_MISSING=$((${COUNT_INPUT_CSV} - ${COUNT_OUTPUT_CSV}))
 #
 echo -e "\n ---\nSummary"
-echo "  Total input: ${COUNT_INPUT_CSV}"
-echo "  Total returned: ${COUNT_TALLIED}"
-echo "  Total difference: ${COUNT_UNKNOWN}"
+echo "  Received: ${COUNT_INPUT_CSV}"
+echo "  Returned: ${COUNT_OUTPUT_CSV}"
+echo "  Missing:  ${COUNT_MISSING}"
 echo -e "\n"
