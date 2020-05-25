@@ -43,18 +43,24 @@ url_cleaner() {
         -e 's/\/*$//g'
 }
 
+curl_runner() {
+    TO_RETURN="Unassigned/Error"
+    if [ "${#}" -eq 0 ]; then
+        TO_RETURN="Excluded"
+    else
+        TO_RETURN=$(
+            curl -ILm "${TIMEOUT}" --silent "${1}" | grep HTTP | grep -Eo '[0-9]*' | tail -1
+        ) || TO_RETURN="Unavailable"
+    fi
+    echo "${TO_RETURN}"
+}
+
 # Function - curl cleaned urls and return results
 #
-curl_cases() {
-    ADDRESS=$(url_cleaner ${1})
-    if [ -z "${ADDRESS}" ]; then
-        RESULT="Excluded"
-    else
-        RESULT=$(curl -ILm "${TIMEOUT}" --silent "${ADDRESS}" | grep HTTP | grep -Eo '[0-9]*' ) || \
-            RESULT="Unavailable"
-    fi
-    echo "${1} ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
-    echo "${RESULT}"
+curl_and_store() {
+    CURL_RESULT=$(curl_runner $(url_cleaner ${1}))
+    echo "${1} ${CURL_RESULT##*$'\n'}" >>"${SAVE_OUT}"
+    echo "${CURL_RESULT}"
 }
 
 # Curl sites, keeping only last line of results
@@ -62,7 +68,7 @@ curl_cases() {
 echo >"${SAVE_OUT}"
 while read -r in; do
     echo; echo "${in}"
-    RESULT=$(curl_cases ${in})
+    RESULT=$(curl_and_store ${in})
     echo "${RESULT##*$'\n'}"
 done <"${INPUT_CSV}"
 
@@ -77,4 +83,4 @@ done
 #
 echo -e "\n ---\nSummary"
 echo "  Received: $(grep -cve '^\s*$' "${INPUT_CSV}")"
-echo "  Returned: $(grep -cve '^\s*$' "${INPUT_CSV}")"
+echo "  Returned: $(grep -cve '^\s*$' "${SAVE_OUT}")"
