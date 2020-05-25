@@ -14,7 +14,7 @@ IFS=$'\n\t'
 # Input and output files
 #
 INPUT_CSV=${1}
-SAVE_OUT=./results.csv
+SAVE_OUT=${2:-./results.csv}
 
 # Config variables
 #
@@ -43,33 +43,25 @@ url_cleaner() {
         -e 's/\/*$//g'
 }
 
-curl_runner() {
-    TO_RETURN="Unassigned/Error"
-    if [ "${#}" -eq 0 ]; then
-        TO_RETURN="Excluded"
-    else
-        TO_RETURN=$(
-            curl -ILm "${TIMEOUT}" --silent "${1}" | grep HTTP | grep -Eo '[0-9]*' | tail -1
-        ) || TO_RETURN="Unavailable"
-    fi
-    echo "${TO_RETURN}"
-}
-
-# Function - curl cleaned urls and return results
+# Function - return HTTP code, Excluded or Unavailable, depending on parameter
 #
-curl_and_store() {
-    CURL_RESULT=$(curl_runner $(url_cleaner ${1}))
-    echo "${1} ${CURL_RESULT##*$'\n'}" >>"${SAVE_OUT}"
-    echo "${CURL_RESULT}"
+curl_runner() {
+    TO_CURL=$(url_cleaner ${1})
+    case ${TO_CURL} in
+        "") echo "Excluded" ;;
+        *)  curl -ILm "${TIMEOUT}" -s "${TO_CURL}" | grep HTTP | grep -Eo '[0-9]*' | tail -1 \
+            || echo "Unavailable" ;;
+    esac
 }
 
-# Curl sites, keeping only last line of results
+# Curl sites, store with results in CSV
 #
 echo >"${SAVE_OUT}"
 while read -r in; do
     echo; echo "${in}"
-    RESULT=$(curl_and_store ${in})
-    echo "${RESULT##*$'\n'}"
+    RESULT=$(curl_runner ${in})
+    echo "${in%,}, ${RESULT}" >>"${SAVE_OUT}"
+    echo "${RESULT}"
 done <"${INPUT_CSV}"
 
 # Tally results
