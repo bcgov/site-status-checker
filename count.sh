@@ -46,13 +46,13 @@ url_cleaner() {
 # Function - curl cleaned urls and return results
 #
 curl_cases() {
-    if [ -z "${1}" ]; then
+    ADDRESS=$(url_cleaner ${1})
+    if [ -z "${ADDRESS}" ]; then
         RESULT="Excluded"
     else
-        RESULT=$(curl -ILm "${TIMEOUT}" --silent "$(url_cleaner ${1})" | grep HTTP) || \
+        RESULT=$(curl -ILm "${TIMEOUT}" --silent "${ADDRESS}" | grep HTTP | grep -Eo '[0-9]*' ) || \
             RESULT="Unavailable"
     fi
-    echo "$(curl -ILm "${TIMEOUT}" --silent "${1}" | grep HTTP)" >> temp.out
     echo "${1} ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
     echo "${RESULT}"
 }
