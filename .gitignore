@@ -108,5 +108,8 @@ node_modules/
 # IDE
 .vscode/
 
+# Temp
+temp.out
+
 # Output
 results.csv
