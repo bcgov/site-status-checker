@@ -43,38 +43,38 @@ url_cleaner() {
         -e 's/\/*$//g'
 }
 
+# Function - curl cleaned urls and return results
+#
+curl_cases() {
+    if [ -z "${1}" ]; then
+        RESULT="Excluded"
+    else
+        RESULT=$(curl -ILm "${TIMEOUT}" --silent "$(url_cleaner ${1})" | grep HTTP) || \
+            RESULT="Unavailable"
+    fi
+    echo "$(curl -ILm "${TIMEOUT}" --silent "${1}" | grep HTTP)" >> temp.out
+    echo "${1} ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
+    echo "${RESULT}"
+}
+
 # Curl sites, keeping only last line of results
 #
 echo >"${SAVE_OUT}"
 while read -r in; do
     echo; echo "${in}"
-    CLEANED=$(url_cleaner ${in})
-    if [ -z "${CLEANED}" ]; then
-        RESULT="Excluded"
-    else
-        RESULT=$(curl -ILm "${TIMEOUT}" --silent "${CLEANED}" | grep HTTP) || \
-            RESULT="Unavailable"
-    fi
+    RESULT=$(curl_cases ${in})
     echo "${RESULT##*$'\n'}"
-    echo "${in} ${RESULT##*$'\n'}" >>"${SAVE_OUT}"
 done <"${INPUT_CSV}"
 
 # Tally results
 #
-KEYWORDS=$(echo "${KEYWORDS}" | sed 's/^[ \t]*//g')
 echo -e "\n ---\nResults"
-for k in $KEYWORDS; do
+for k in $(echo "${KEYWORDS}" | sed 's/^[ \t]*//g'); do
     echo "  ${k}: $(grep "$k" $SAVE_OUT | wc -l)"
 done
 
 # Summarize
 #
-COUNT_INPUT_CSV=$(grep -cve '^\s*$' "${INPUT_CSV}")
-COUNT_OUTPUT_CSV=$(grep -cve '^\s*$' "${INPUT_CSV}")
-COUNT_MISSING=$((${COUNT_INPUT_CSV} - ${COUNT_OUTPUT_CSV}))
-#
 echo -e "\n ---\nSummary"
-echo "  Received: ${COUNT_INPUT_CSV}"
-echo "  Returned: ${COUNT_OUTPUT_CSV}"
-echo "  Missing:  ${COUNT_MISSING}"
-echo -e "\n"
+echo "  Received: $(grep -cve '^\s*$' "${INPUT_CSV}")"
+echo "  Returned: $(grep -cve '^\s*$' "${INPUT_CSV}")"
