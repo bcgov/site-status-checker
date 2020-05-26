@@ -2,14 +2,15 @@
 #%
 #%   Reads a CSV file of websites and outputs their statuses into results.csv
 #%
-#%     [TIMEOUT=10] ./count.sh ./input.csv [./results.csv]
+#%     [TIMEOUT=10] THIS_FILE ./input.csv [./results.csv]
 #%
 
-# Specify halt conditions (errors, unsets, non-zero pipes), field separator and verbosity
+# Halt conditions (errors, unsets, non-zero pipes), field separator, verbosity and help
 #
 set -euo pipefail
 IFS=$'\n\t'
 [ ! "${VERBOSE:-}" == "true" ] || set -x
+(($#)) || { grep "^#%" ${0} | sed -e "s/^#%//g" -e "s|THIS_FILE|${0}|g"; exit; }
 
 # Variables - input, output and curl timeout
 #
