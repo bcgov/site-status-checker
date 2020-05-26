@@ -32,7 +32,7 @@ curl_runner() {
     TO_CURL=$(url_cleaner ${1})
     case ${TO_CURL} in
         "") echo "Excluded" ;;
-        *)  curl -ILm "${TIMEOUT}" -s "${TO_CURL}" | grep HTTP | grep -Eo '[0-9]*' | tail -1 ||
+        *)  curl -ILm "${TIMEOUT}" -s "${TO_CURL}" -k | grep HTTP | grep -Eo '[0-9]*' | tail -1 ||
                 echo "Unavailable" ;;
     esac
 }
