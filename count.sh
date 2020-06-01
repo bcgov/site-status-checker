@@ -22,17 +22,11 @@ HEADER_OUT="${HEADER_OUT:-Status}"
 # Return first match in header or error and length+1 for appending
 #
 header_position() {
-    i=1
-    IFS=, read -a HEADERS <<< "$(head -1 "${INPUT_CSV}")"
-    for h in "${HEADERS[@]}"; do
-        if [ "${h}" == "${1}" ]; then
-            echo "${i}"
-            return 0
-        fi
+    i=0
+    head -1 "${INPUT_CSV}" | tr "," "\n" | while IFS=, read -r h; do
         ((i=i+1))
+        [ "${h}" != "${1}" ] || echo "${i}"
     done
-    echo "${i}"
-    return 1
 }
 
 # Clean up input - exclude ftp \\, remove http[s]:// and clip after , ( ? / space
@@ -54,6 +48,11 @@ curl_runner() {
                 echo "Unavailable" ;;
     esac
 }
+
+# Find relative positions for input and output columns
+#
+INDEX_IN=$(header_position ${HEADER_IN})
+INDEX_OUT=$(header_position ${HEADER_OUT})
 
 # Curl sites and save results
 #
