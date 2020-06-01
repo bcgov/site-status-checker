@@ -16,6 +16,24 @@ set -euo pipefail
 INPUT_CSV="${1}"
 SAVE_OUT="${2:-./results.csv}"
 TIMEOUT="${TIMEOUT:-15}"
+HEADER_IN="${HEADER_IN:-URL}"
+HEADER_OUT="${HEADER_OUT:-Status}"
+
+# Return first match in header or error and length+1 for appending
+#
+header_position() {
+    i=1
+    IFS=, read -a HEADERS <<< "$(head -1 "${INPUT_CSV}")"
+    for h in "${HEADERS[@]}"; do
+        if [ "${h}" == "${1}" ]; then
+            echo "${i}"
+            return 0
+        fi
+        ((i=i+1))
+    done
+    echo "${i}"
+    return 1
+}
 
 # Clean up input - exclude ftp \\, remove http[s]:// and clip after , ( ? / space
 #
