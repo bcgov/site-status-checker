@@ -24,8 +24,8 @@ HEADER_OUT="${HEADER_OUT:-Status}"
 header_position() {
     i=0
     head -1 "${INPUT_CSV}" | tr "," "\n" | while IFS=, read -r h; do
-        ((i=i+1))
         [ "${h}" != "${1}" ] || echo "${i}"
+        ((i=i+1))
     done
 }
 
@@ -57,8 +57,9 @@ INDEX_OUT=$(header_position ${HEADER_OUT})
 # Curl sites and save results
 #
 echo | tee "${SAVE_OUT}"
-while read -r in; do
-    echo "${in%,}, $(curl_runner ${in})" | tee -a "${SAVE_OUT}"
+while read -r line; do
+    IFS=, c=($line)
+    echo "${line%,}, $(curl_runner ${c[${INDEX_IN}]})" | tee -a "${SAVE_OUT}"
 done <"${INPUT_CSV}"
 
 # Summarize
