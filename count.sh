@@ -56,11 +56,11 @@ INDEX_OUT=$(header_position ${HEADER_OUT})
 
 # Curl sites and save results
 #
-echo | tee "${SAVE_OUT}"
-while read -r line; do
+head -1 "${INPUT_CSV}" | tee "${SAVE_OUT}"
+sed 1d "${INPUT_CSV}" | while read -r line; do
     IFS=, c=($line)
     echo "${line%,}, $(curl_runner ${c[${INDEX_IN}]})" | tee -a "${SAVE_OUT}"
-done <"${INPUT_CSV}"
+done
 
 # Summarize
 #
