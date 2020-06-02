@@ -24,8 +24,8 @@ HEADER_OUT="${HEADER_OUT:-Status}"
 header_position() {
     i=0
     head -1 "${INPUT_CSV}" | tr "," "\n" | while IFS=, read -r h; do
-        [ "${h}" != "${1}" ] || echo "${i}"
         ((i=i+1))
+        [ "${h}" != "${1}" ] || echo "${i}"
     done
 }
 
@@ -59,7 +59,7 @@ INDEX_OUT=$(header_position ${HEADER_OUT})
 head -1 "${INPUT_CSV}" | tee "${SAVE_OUT}"
 sed 1d "${INPUT_CSV}" | while read -r line; do
     IFS=, c=($line)
-    RESULT=$(curl_runner ${c[${INDEX_IN}]})
+    RESULT=$(curl_runner ${c[${INDEX_IN}-1]})
     IFS=' '
     echo $line | awk -F, -v OFS=, '{$'"${INDEX_OUT}"'="'"${RESULT}"'"; print}' | tee -a "${SAVE_OUT}"
 done
