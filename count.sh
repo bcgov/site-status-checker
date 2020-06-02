@@ -59,7 +59,9 @@ INDEX_OUT=$(header_position ${HEADER_OUT})
 head -1 "${INPUT_CSV}" | tee "${SAVE_OUT}"
 sed 1d "${INPUT_CSV}" | while read -r line; do
     IFS=, c=($line)
-    echo "${line%,}, $(curl_runner ${c[${INDEX_IN}]})" | tee -a "${SAVE_OUT}"
+    RESULT=$(curl_runner ${c[${INDEX_IN}]})
+    IFS=' '
+    echo $line | awk -F, -v OFS=, '{$'"${INDEX_OUT}"'="'"${RESULT}"'"; print}' | tee -a "${SAVE_OUT}"
 done
 
 # Summarize
