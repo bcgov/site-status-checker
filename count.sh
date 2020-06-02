@@ -17,7 +17,7 @@ INPUT_CSV="${1}"
 SAVE_OUT="${2:-./results.csv}"
 TIMEOUT="${TIMEOUT:-15}"
 HEADER_IN="${HEADER_IN:-URL}"
-HEADER_OUT="${HEADER_OUT:-Status}"
+HEADER_OUT="${HEADER_OUT:-HTTP_STATUS}"
 
 # Return first match in header or error and length+1 for appending
 #
@@ -49,19 +49,17 @@ curl_runner() {
     esac
 }
 
-# Find relative positions for input and output columns
+# Curl sites and save results
 #
 INDEX_IN=$(header_position ${HEADER_IN})
 INDEX_OUT=$(header_position ${HEADER_OUT})
 
-# Curl sites and save results
 #
 head -1 "${INPUT_CSV}" | tee "${SAVE_OUT}"
 sed 1d "${INPUT_CSV}" | while read -r line; do
     IFS=, c=($line)
     RESULT=$(curl_runner ${c[${INDEX_IN}-1]})
-    IFS=' '
-    echo $line | awk -F, -v OFS=, '{$'"${INDEX_OUT}"'="'"${RESULT}"'"; print}' | tee -a "${SAVE_OUT}"
+    echo "${line}" | awk -F',' -vOFS=',' '{$'"${INDEX_OUT}"'="'"${RESULT}"'"; print}' | tee -a "${SAVE_OUT}"
 done
 
 # Summarize
