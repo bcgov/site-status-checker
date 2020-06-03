@@ -26,14 +26,10 @@ SAVE_OUT="${2:-./results.csv}"
 #
 IFS=','
 
-# Return first match in header or error and length+1 for appending
+# Receive (1) a comma separated string and (2) a string, return a position match
 #
-header_position() {
-    i=0
-    head -1 "${INPUT_CSV}" | tr "," "\n" | while read -r h; do
-        ((i=i+1))
-        [ "${h}" != "${1}" ] || echo "${i}"
-    done
+csvar_position() {
+    echo "${1}" | awk -F, '{for(i=1;i<=NF;i++){if($i=="'"${2}"'") print i;}}'
 }
 
 # Clean up input - exclude ftp \\, remove http[s]:// and clip after , ( ? / space
@@ -58,8 +54,9 @@ curl_runner() {
 
 # Curl sites and save results
 #
-INDEX_IN=$(header_position ${HEADER_IN})
-INDEX_OUT=$(header_position ${HEADER_OUT})
+HEADERS=$(head -1 "${INPUT_CSV}")
+INDEX_IN=$(csvar_position "${HEADERS}" "${HEADER_IN}")
+INDEX_OUT=$(csvar_position "${HEADERS}" "${HEADER_OUT}")
 #
 head -1 "${INPUT_CSV}" | tee "${SAVE_OUT}"
 sed 1d "${INPUT_CSV}" | while read -r line; do
