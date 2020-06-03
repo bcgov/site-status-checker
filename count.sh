@@ -54,15 +54,26 @@ curl_runner() {
 
 # Curl sites and save results
 #
+APPEND=0
 HEADERS=$(head -1 "${INPUT_CSV}")
 INDEX_IN=$(csvar_position "${HEADERS}" "${HEADER_IN}")
 INDEX_OUT=$(csvar_position "${HEADERS}" "${HEADER_OUT}")
+if [ -z "${INDEX_OUT}" ]; then
+    APPEND=1
+    HEADERS=$(echo "${HEADERS}","${HEADER_OUT}")
+    INDEX_OUT=$(csvar_position "${HEADERS}" "${HEADER_OUT}")
+fi
 #
-head -1 "${INPUT_CSV}" | tee "${SAVE_OUT}"
+# COMMAND="'awk -F, -vOFS=, \'{$\'"${INDEX_OUT}"\'="\'"${RESULT}"\'"; print}\''"
+echo "${HEADERS}" | tee "${SAVE_OUT}"
 sed 1d "${INPUT_CSV}" | while read -r line; do
     c=($line)
     RESULT=$(curl_runner ${c[${INDEX_IN}-1]})
-    echo "${line}" | awk -F',' -vOFS=',' '{$'"${INDEX_OUT}"'="'"${RESULT}"'"; print}' | tee -a "${SAVE_OUT}"
+    if [ "${APPEND}" -eq 1 ]; then
+        echo "${line}", "${RESULT}" | tee -a "${SAVE_OUT}"
+    else
+        echo "${line}" | awk -F',' -vOFS=',' '{$'"${INDEX_OUT}"'="'"${RESULT}"'"; print}' | tee -a "${SAVE_OUT}"
+    fi
 done
 
 # Summarize
