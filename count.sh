@@ -57,29 +57,30 @@ curl_runner() {
     esac
 }
 
-# Curl sites and save results
+# Format output line, inserting or appending
 #
-APPEND=0
+csrow_builder() {
+    case ${3} in
+    "") echo "${1}","${2}" ;;
+    *) echo "${1}" | awk -F',' -vOFS=',' '{
+            $'"${3}"'="'"${2}"'"; print
+        }' ;;
+    esac
+}
+
+# Find input and output header positions, else append output as last column
+#
 HEADERS=$(head -1 "${INPUT_CSV}")
 INDEX_IN=$(csvar_position "${HEADERS}" "${HEADER_IN}")
 INDEX_OUT=$(csvar_position "${HEADERS}" "${HEADER_OUT}")
-if [ -z "${INDEX_OUT}" ]; then
-    APPEND=1
-    HEADERS=$(echo "${HEADERS}","${HEADER_OUT}")
-    INDEX_OUT=$(csvar_position "${HEADERS}" "${HEADER_OUT}")
-fi
+[ ! -z "${INDEX_OUT}" ] || HEADERS="${HEADERS}","${HEADER_OUT}"
+
+# Curl sites and save results
 #
 echo "${HEADERS}" | tee "${SAVE_OUT}"
 sed 1d "${INPUT_CSV}" | while read -r line; do
     c=($line)
-    RESULT=$(curl_runner ${c[${INDEX_IN} - 1]})
-    if [ "${APPEND}" -eq 1 ]; then
-        echo "${line}", "${RESULT}" | tee -a "${SAVE_OUT}"
-    else
-        echo "${line}" | awk -F',' -vOFS=',' '{
-            $'"${INDEX_OUT}"'="'"${RESULT}"'"; print
-        }' | tee -a "${SAVE_OUT}"
-    fi
+    csrow_builder "${line}" "$(curl_runner ${c[${INDEX_IN} - 1]})" "${INDEX_OUT}" | tee -a "${SAVE_OUT}"
 done
 
 # Summarize
