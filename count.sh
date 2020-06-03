@@ -60,7 +60,6 @@ curl_runner() {
 #
 INDEX_IN=$(header_position ${HEADER_IN})
 INDEX_OUT=$(header_position ${HEADER_OUT})
-
 #
 head -1 "${INPUT_CSV}" | tee "${SAVE_OUT}"
 sed 1d "${INPUT_CSV}" | while read -r line; do
