@@ -9,7 +9,10 @@
 #
 set -euo pipefail
 [ ! "${VERBOSE:-}" == "true" ] || set -x
-(($#)) || { grep "^#%" ${0} | sed -e "s/^#%//g" -e "s|THIS_FILE.sh|${0}|g"; exit; }
+(($#)) || {
+    grep "^#%" ${0} | sed -e "s/^#%//g" -e "s|THIS_FILE.sh|${0}|g"
+    exit
+}
 
 # Variable defaults - can assign at runtime with VARIABLE=value
 #
@@ -29,7 +32,9 @@ IFS=','
 # Receive (1) a comma separated string and (2) a string, return a position match
 #
 csvar_position() {
-    echo "${1}" | awk -F, '{for(i=1;i<=NF;i++){if($i=="'"${2}"'") print i;}}'
+    echo "${1}" | awk -F, '{for(i=1;i<=NF;i++){
+        if($i=="'"${2}"'") print i;
+    }}'
 }
 
 # Clean up input - exclude ftp \\, remove http[s]:// and clip after , ( ? / space
@@ -46,9 +51,9 @@ url_cleaner() {
 curl_runner() {
     TO_CURL=$(url_cleaner ${1})
     case ${TO_CURL} in
-        "") echo "Excluded" ;;
-        *)  curl -ILm "${TIMEOUT}" -s "${TO_CURL}" -k | grep HTTP | grep -Eo '[0-9]{3}' | tail -1 ||
-                echo "Unavailable" ;;
+    "") echo "Excluded" ;;
+    *) curl -ILm "${TIMEOUT}" -s "${TO_CURL}" -k | grep HTTP | grep -Eo '[0-9]{3}' | tail -1 ||
+        echo "Unavailable" ;;
     esac
 }
 
@@ -64,15 +69,16 @@ if [ -z "${INDEX_OUT}" ]; then
     INDEX_OUT=$(csvar_position "${HEADERS}" "${HEADER_OUT}")
 fi
 #
-# COMMAND="'awk -F, -vOFS=, \'{$\'"${INDEX_OUT}"\'="\'"${RESULT}"\'"; print}\''"
 echo "${HEADERS}" | tee "${SAVE_OUT}"
 sed 1d "${INPUT_CSV}" | while read -r line; do
     c=($line)
-    RESULT=$(curl_runner ${c[${INDEX_IN}-1]})
+    RESULT=$(curl_runner ${c[${INDEX_IN} - 1]})
     if [ "${APPEND}" -eq 1 ]; then
         echo "${line}", "${RESULT}" | tee -a "${SAVE_OUT}"
     else
-        echo "${line}" | awk -F',' -vOFS=',' '{$'"${INDEX_OUT}"'="'"${RESULT}"'"; print}' | tee -a "${SAVE_OUT}"
+        echo "${line}" | awk -F',' -vOFS=',' '{
+            $'"${INDEX_OUT}"'="'"${RESULT}"'"; print
+        }' | tee -a "${SAVE_OUT}"
     fi
 done
 
