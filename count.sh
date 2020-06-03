@@ -31,7 +31,7 @@ IFS=','
 #
 csvar_position() {
     echo "${1}" | awk -F, '{for(i=1;i<=NF;i++){
-        if($i=="'"${2}"'") print i;
+        if($i=="'${2}'") print i;
     }}'
 }
 
@@ -49,10 +49,10 @@ url_cleaner() {
 #   fn string
 #
 curl_runner() {
-    CURL_URL=$(url_cleaner ${1})
-    case ${CURL_URL} in
+    CURL_URL=$(url_cleaner "${1}")
+    case "${CURL_URL}" in
     "") echo "Excluded" ;;
-    *) curl -ILm "${TIMEOUT}" -s "${CURL_URL}" -k | grep HTTP | grep -Eo '[0-9]{3}' | tail -1 ||
+    *) curl -ILm "${TIMEOUT}" -s "${CURL_URL}" -k | grep 'HTTP' | grep -Eo '[0-9]{3}' | tail -1 ||
         echo "Unavailable" ;;
     esac
 }
@@ -62,8 +62,8 @@ curl_runner() {
 #
 csrow_builder() {
     CS_CUT_LIST=(${1})
-    CURL_RESULT=$(curl_runner ${CS_CUT_LIST[${2} - 1]})
-    case ${3} in
+    CURL_RESULT=$(curl_runner ${CS_CUT_LIST["${2}" - 1]})
+    case "${3}" in
     "") echo "${1}","${CURL_RESULT}" ;;
     *) echo "${1}" | awk -F',' -vOFS=',' '{
             $'"${3}"'="'"${CURL_RESULT}"'"; print
