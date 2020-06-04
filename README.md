@@ -107,7 +107,7 @@ Sites that do respond will receive HTTP status codes.  Please see Wikipedia for 
 
 `400`-codes indicate client errors.  They are usually related to rights or incorrect addresses.
 
-`500`-codes indicate server errors.  The site could be down, overloaded, timing out othrewise unavailable.
+`500`-codes indicate server errors.  The site could be down, overloaded, timing out otherwise unavailable.
 
 #### 100 and 300 - Unreported Codes
 
@@ -145,7 +145,7 @@ Sample run.
 | adventure      | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 200         |
 |                | traffic | \\\things.yup.blorg.idir.yup                             | butterfly | Excluded    |
 | reckless       | read    | ftp://watermelon                                        | conscious | Excluded    |
-| sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  | Unavailable |
+| sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  | No Response |
 | landowner      | suite   | https://www.facebook.com/marketplace                    | album     | 200         |
 | free           |         | https://farts.com/ (redirects to thepooter.com)         | reduction | 200         |
 | tribute        | balance | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar | infinite  | 405         |
@@ -165,7 +165,7 @@ HEADER_OUT=NEW ./count.sh sites.csv
 | adventure      | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 3           | 200         |
 |                | traffic | \\\things.yup.blorg.idir.yup                             | butterfly | 4           | Excluded    |
 | reckless       | read    | ftp://watermelon                                        | conscious | 5           | Excluded    |
-| sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  |             | Unavailable |
+| sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  |             | No Response |
 | landowner      | suite   | https://www.facebook.com/marketplace                    | album     | 7           | 200         |
 | free           |         | https://farts.com/ (redirects to thepooter.com)         | reduction | 8           | 200         |
 | tribute        | balance | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar | infinite  | 9           | 503         |
