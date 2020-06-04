@@ -1,14 +1,14 @@
 # Site Status Checker
 
-Reads web addresses from a CSV file and use curl to record their HTTP status codes.  Results are provided in a modified version of the original CSV file.  Created and tested on Fedora 32 Linux.
+Reads web addresses from a CSV file and uses curl to record their HTTP status codes.  Results are provided in a modified version of the original CSV file.  Created and tested on Fedora 32 Linux.
 
 ## Usage
 
 ### Installation
 
-There is no installation.  The script can be cloned or copied.  If copied make sure the new file is executable.
+There is no installation.  The script can be cloned or copied.  If copied, make sure the new file is executable.
 
-Clone medthod.
+Clone method.
 
 ```bash
 git clone https://github.com/bcgov/site-status-checker
@@ -48,7 +48,7 @@ Optional: Change the default file output from `results.csv` with the second para
 
 ### Input and Output Files
 
-A CSV (comma separated value) is expected.  Call the input column header `URL`.  A second CSV file is created with the same contents, but adding results under the `HTTP_STATUS` column.  If not present the column will be created.
+A CSV (comma separated value) is expected.  Call the input column header `URL`.  A second CSV file is created with the same content, but adding results under the `HTTP_STATUS` column.  If not present, the column will be created.
 
 `URL` is the default input header.
 
@@ -192,11 +192,11 @@ HEADER_OUT=NEW ./count.sh sites.csv
 
 ### Issues
 
-Please request features or issue corrections by submitting issues.
+Please request features or issue corrections by submitting [issues](https://github.com/bcgov/site-status-checker/issues).
 
 ### Pull Requests
 
-Pull requests are even better!  Contributions will be squashed on merge after review and acceptance.  Providing adequate description of changes makes this much easier.
+[Pull requests](https://github.com/bcgov/site-status-checker/pulls) are even better!  Contributions will be squashed on merge after review and acceptance.  Providing adequate description of changes makes this much easier.
 
 Of course, please test thoroughly using `sites.csv` and any other CSV data.
 
@@ -206,4 +206,4 @@ Of course, please test thoroughly using `sites.csv` and any other CSV data.
 
 ## Security concerns
 
-Please be aware is unsafe to provide confidential data to an online tool.
+Please be aware it is unsafe to provide confidential data to an online tool.
