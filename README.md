@@ -88,9 +88,9 @@ Empty and filtered out addresses will be labeled `Excluded`.
 
 FTP sites and local file shares cannot be used.  E.g. `ftp://` or `\\`.
 
-### Unavailable
+### No Response
 
-Addresses that do not receive a response will be labeled `Unavailable`.
+Addresses that do not receive a response will be labeled `No Response`.
 
 This may mean that the address is wrong, has been moved without providing a redirect or is down.
 
