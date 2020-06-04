@@ -109,7 +109,12 @@ node_modules/
 .vscode/
 
 # Temp
-temp.out
+.~*
+*.csv#
+*.tmp
+*.temp
+*.out
 
-# Output
-results.csv
+# Data
+*.csv
+!sites.csv
