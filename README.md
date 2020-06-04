@@ -1,8 +1,10 @@
 # Site Status Checker
 
-The provided script uses curl to record HTTP status codes from a CSV file containing web addresses.  Results are provided in a modified version of the original CSV file.  Tested on Fedora 32 Linux.
+The provided script reads web addresses from a CSV file and uses curl to record their HTTP status codes.  Results are provided in a modified version of the original CSV file.  Tested on Fedora 32 Linux.
 
-## Installation
+## Usage
+
+### Installation
 
 There is no installation.  The script can be cloned or copied.  If copied make sure the new file is executable as below.
 
@@ -10,7 +12,7 @@ There is no installation.  The script can be cloned or copied.  If copied make s
 chmod +x count.sh
 ```
 
-## Usage
+### Parameters
 
 Running the script without parameters provides some basic direction.
 
@@ -22,24 +24,25 @@ Running the script without parameters provides some basic direction.
      [TIMEOUT=10] ./count.sh ./input.csv [./results.csv]
 ```
 
-As an example point the script to sample data in `sites.csv`.
-
+Required: Consume an input file with the first parameter.
 
 ```bash
 ./count.sh sites.csv 
 ```
 
-Specify an output file by providing it as a parameter.
+Optional: Change the default file output from `results.csv` with the second parameter.
+
 ```bash
 ./count.sh sites.csv output-file.csv
 ```
 
 ### Input and Output Files
 
-A CSV (comma separated value) is expected.  Call the input column header URL.  A second CSV file is created with the same contents, but adding results under the HTTP_STATUS column.  It will be created that column is not present.
+A CSV (comma separated value) is expected.  Call the input column header `URL`.  A second CSV file is created with the same contents, but adding results under the `HTTP_STATUS` column.  If not present the column will be created.
 
-* `URL` is the default input header
-* `HTTP_STATUS` is the default output header
+`URL` is the default input header.
+
+`HTTP_STATUS` is the default output header.
 
 ### Changing Default Behaviour
 
@@ -81,14 +84,14 @@ Please see this [Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_co
 
 ## Sample data
 
-Sample sites.csv
+Sample data.
 
 | Won       | Too     | URL                                                     | Fore      | HTTP_STATUS |
 | --------- | ------- | ------------------------------------------------------- | --------- | ----------- |
 | sweet     | bike    | https://github.com/bcgov/site-status-checker            | margin    | 1           |
 | encourage | egg     | https://www.google.ca/                                  |           | 2           |
 | adventure | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 3           |
-|           | traffic | \\things.yup.blorg.idir.yup                             | butterfly | 4           |
+|           | traffic | \\\things.yup.blorg.idir.yup                             | butterfly | 4           |
 | reckless  | read    | ftp://watermelon                                        | conscious | 5           |
 | sphere    | appear  | eato.burrito (this is not a thing)                      | gradient  |             |
 | landowner | suite   | https://www.facebook.com/marketplace                    | album     | 7           |
@@ -96,7 +99,8 @@ Sample sites.csv
 | tribute   | balance | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar | infinite  | 9           |
 |           |
 
-Sample run
+Sample run.
+
 ```bash
 ./count.sh sites.csv
 ```
@@ -106,7 +110,7 @@ Sample run
 | sweet          | bike    | https://github.com/bcgov/site-status-checker            | margin    | 200         |
 | encourage      | egg     | https://www.google.ca/                                  |           | 200         |
 | adventure      | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 200         |
-|                | traffic | \\things.yup.blorg.idir.yup                             | butterfly | Excluded    |
+|                | traffic | \\\things.yup.blorg.idir.yup                             | butterfly | Excluded    |
 | reckless       | read    | ftp://watermelon                                        | conscious | Excluded    |
 | sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  | Unavailable |
 | landowner      | suite   | https://www.facebook.com/marketplace                    | album     | 200         |
@@ -115,7 +119,7 @@ Sample run
 |                |
 | 10 in / 10 out |
 
-Sample run specifying a header that is not already present.
+Sample run appending a non-standard header.
 
 ```bash
 HEADER_OUT=NEW ./count.sh sites.csv
@@ -126,7 +130,7 @@ HEADER_OUT=NEW ./count.sh sites.csv
 | sweet          | bike    | https://github.com/bcgov/site-status-checker            | margin    | 1           | 200         |
 | encourage      | egg     | https://www.google.ca/                                  |           | 2           | 200         |
 | adventure      | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 3           | 200         |
-|                | traffic | \\things.yup.blorg.idir.yup                             | butterfly | 4           | Excluded    |
+|                | traffic | \\\things.yup.blorg.idir.yup                             | butterfly | 4           | Excluded    |
 | reckless       | read    | ftp://watermelon                                        | conscious | 5           | Excluded    |
 | sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  |             | Unavailable |
 | landowner      | suite   | https://www.facebook.com/marketplace                    | album     | 7           | 200         |
@@ -134,6 +138,20 @@ HEADER_OUT=NEW ./count.sh sites.csv
 | tribute        | balance | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar | infinite  | 9           | 503         |
 |                |
 | 10 in / 10 out |
+
+## Cloud Pathfinder Team
+
+[Julian Subda](https://github.com/actionanalytics), Product Owner
+
+[Shivagani Murti](https://github.com/zoyavit), Technical Administrator
+
+[Derek Roberts](https://github.com/derekroberts), DevOps Specialst
+
+## Attributions
+
+[Matt Lewis](https://github.com/mplewis) for creating [csvtomd](https://csvtomd.com/), which formatted the CSV in this guide.  [Source](https://github.com/mplewis/csvtomd-web).
+
+[Danny Guo](https://github.com/dguo/make-a-readme) for the starter [README.md](https://www.makeareadme.com) and guide.  [Source](https://github.com/dguo/make-a-readme).
 
 ## Contributing
 
@@ -146,20 +164,6 @@ Of course, please test thoroughly using `sites.csv` and any other CSV data.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
-## Team
-
-[Derek Roberts](https://github.com/derekroberts)
-
-[Julian Subda](https://github.com/actionanalytics)
-
-[Shivagani Murti](https://github.com/zoyavit)
-
-## Attributions
-
-[Matt Lewis](https://github.com/mplewis) for creating [csvtomd](https://csvtomd.com/), which formatted the CSV in this guide.  [Source](https://github.com/mplewis/csvtomd-web).
-
-[Danny Guo](https://github.com/dguo/make-a-readme) for the starter [README.md](https://www.makeareadme.com) and guide.  [Source](https://github.com/dguo/make-a-readme).
 
 ## Security concerns
 
