@@ -124,7 +124,7 @@ Of course, please test thoroughly using `sites.csv` or any other CSV data.
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
-## Attributions
+## Team
 
 [Derek Roberts](https://github.com/derekroberts), the original author of this tool.
 
@@ -132,7 +132,11 @@ Of course, please test thoroughly using `sites.csv` or any other CSV data.
 
 [Shivagani Murti](https://github.com/zoyavit) for technical and administrative assistance.
 
+## Attributions
+
 [Matt Lewis](https://github.com/mplewis) for creating [csvtomd](https://csvtomd.com/), which formatted the CSV in this guide.  [Source](https://github.com/mplewis/csvtomd-web).
+
+[Danny Guo](https://github.com/dguo/make-a-readme) for the starter [README.md and guide](https://www.makeareadme.com).  [Source](https://github.com/dguo/make-a-readme)
 
 ## Security concerns
 
