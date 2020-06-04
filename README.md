@@ -1,20 +1,30 @@
 # Site Status Checker
 
-The provided script reads web addresses from a CSV file and uses curl to record their HTTP status codes.  Results are provided in a modified version of the original CSV file.  Tested on Fedora 32 Linux.
+Reads web addresses from a CSV file and use curl to record their HTTP status codes.  Results are provided in a modified version of the original CSV file.  Created and tested on Fedora 32 Linux.
 
 ## Usage
 
 ### Installation
 
-There is no installation.  The script can be cloned or copied.  If copied make sure the new file is executable as below.
+There is no installation.  The script can be cloned or copied.  If copied make sure the new file is executable.
+
+Clone medthod.
 
 ```bash
+git clone https://github.com/bcgov/site-status-checker
+cd site-status-checker
+```
+
+Copy and paste method.
+
+```bash
+<copy and paste into count.sh>
 chmod +x count.sh
 ```
 
 ### Parameters
 
-Running the script without parameters provides some basic direction.
+Run the script without parameters for basic help.
 
 ```bash
 ./count.sh 
@@ -52,7 +62,7 @@ Input and output headers can be specified at runtime.
 HEADER_IN=URL HEADER_OUT=HTTP_STATUS ./count.sh sites.csv
 ```
 
-The default curl timeout as been set at 15 seconds, but may be changed as follows.
+The default curl timeout has been set at 15 seconds, but may be changed as follows.
 
 ```bash
 TIMEOUT=30 ./count.sh sites.csv
@@ -64,10 +74,10 @@ A verbose mode is provided for troubleshooting.
 VERBOSE=true ./count.sh sites.csv 
 ```
 
-Any combination of those variables can be specified.
+Any combination of variables and optional parameters can be specified.
 
 ```bash
-VERBOSE=true TIMEOUT=30 HEADER_IN=URL HEADER_OUT=HTTP_STATUS ./count.sh sites.csv
+VERBOSE=true TIMEOUT=30 HEADER_IN=URL HEADER_OUT=HTTP_STATUS ./count.sh sites.csv output-file.csv
 ```
 
 ## Understanding Output
@@ -86,17 +96,24 @@ This may mean that the address is wrong, has been moved without providing a redi
 
 ### HTTP Codes
 
-Sites that do respond will be checked for HTTP codes.
+Sites that do respond will receive HTTP status codes.  Please see Wikipedia for a [List of HTTP status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes).
+
+
+#### 200 - Success Codes
 
 `200`-codes indicate success.  Any other codes may be generalized as an error.
 
-`300` codes are redirections, which are handled silently, reporting only final results.
+#### 400 and 500 - Error Codes
 
-`400`-codes indicate client errors.
+`400`-codes indicate client errors.  They are usually related to rights or incorrect addresses.
 
-`500`-codes indicate server errors.
+`500`-codes indicate server errors.  The site could be down, overloaded, timing out othrewise unavailable.
 
-Please see this [Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) for an overview.
+#### 100 and 300 - Unreported Codes
+
+`100`-codes are informational.  These will not be reported.
+
+`300` codes are redirections.  The will be silently followed, resulting in 200, 400 or 500 codes.
 
 ## Sample data
 
@@ -155,7 +172,9 @@ HEADER_OUT=NEW ./count.sh sites.csv
 |                |
 | 10 in / 10 out |
 
-## Cloud Pathfinder Team
+## Attributions
+
+### Cloud Pathfinder Team
 
 [Julian Subda](https://github.com/actionanalytics), Product Owner
 
@@ -163,15 +182,19 @@ HEADER_OUT=NEW ./count.sh sites.csv
 
 [Derek Roberts](https://github.com/derekroberts), DevOps Specialst
 
-## Attributions
+### Thanks
 
-[Matt Lewis](https://github.com/mplewis) for creating [csvtomd](https://csvtomd.com/), which formatted the CSV in this guide.  [Source](https://github.com/mplewis/csvtomd-web).
+[Matt Lewis](https://github.com/mplewis), creator of [csvtomd-web](https://github.com/mplewis/csvtomd-web), which formatted the CSV in this guide
 
-[Danny Guo](https://github.com/dguo/make-a-readme) for the starter [README.md](https://www.makeareadme.com) and guide.  [Source](https://github.com/dguo/make-a-readme).
+[Danny Guo](https://github.com/dguo/make-a-readme), for the starter [README.md](https://github.com/dguo/make-a-readme)
 
 ## Contributing
 
+### Issues
+
 Please request features or issue corrections by submitting issues.
+
+### Pull Requests
 
 Pull requests are even better!  Contributions will be squashed on merge after review and acceptance.  Providing adequate description of changes makes this much easier.
 
