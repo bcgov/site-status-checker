@@ -83,66 +83,57 @@ Please see this [Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_co
 
 Sample sites.csv
 
-| Thing#1    | Thing #2 | Thing Three | URL                                                     |            | blerf       | woog      | HTTP_STATUS    | Thing_four |
-| ---------- | -------- | ----------- | ------------------------------------------------------- | ---------- | ----------- | --------- | -------------- | ---------- |
-| tribute    | balance  | population  | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar |            | needle      | effective | response       | infinite   |
-| encourage  | egg      | slump       | https://www.google.ca/                                  | first      |             | urgency   | decorative     | connection |
-| hammer     | slant    | tell        | https://www.google.ca/                                  | regulation | tumble      | premature | goalkeeper     | elbow      |
-| adventure  | lily     | personality | https://www.google.ca/ (duplicate!)                     | pour       | proud       | lamb      | !@#$%!!http:// | threaten   |
-| free       | traffic  | float       | \\\things.yup.blorg.idir.yup                            | muscle     | gate        | carry     | hover          | butterfly  |
-| reckless   | read     | transparent | ftp://watermelon                                        | prison     | photography | owe       | barrier        | conscious  |
-| sphere     | appear   | hostile     | eato.burrito (this is not a thing)                      | oh         | garbage     | reform    | dressing       | gradient   |
-| breast     | horn     | frequency   | blerf.blorf                                             | brink      | shaft       | award     | agriculture    | lawyer     |
-| landowner  | suite    | gift        | https://www.facebook.com/marketplace                    | kid        | hip         | accept    | leg            | album      |
-| hypothesis |          | clerk       | https://thepooter.com/                                  | tragedy    | retain      | decrease  | verdict        | reduction  |
-| umbrella   | leaf     | mislead     | https://thepooter.com/                                  | conviction | wrap        | position  | shatter        | reflection |
-| sweet      | bike     | authority   | https://github.com/bcgov/site-status-checker            | beg        | alive       | seem      | ratio          | margin     |
+| Won       | Too     | URL                                                     | Fore      | HTTP_STATUS |
+| --------- | ------- | ------------------------------------------------------- | --------- | ----------- |
+| sweet     | bike    | https://github.com/bcgov/site-status-checker            | margin    | 1           |
+| encourage | egg     | https://www.google.ca/                                  |           | 2           |
+| adventure | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 3           |
+|           | traffic | \\things.yup.blorg.idir.yup                             | butterfly | 4           |
+| reckless  | read    | ftp://watermelon                                        | conscious | 5           |
+| sphere    | appear  | eato.burrito (this is not a thing)                      | gradient  |             |
+| landowner | suite   | https://www.facebook.com/marketplace                    | album     | 7           |
+| free      |         | https://farts.com/ (redirects to thepooter.com)         | reduction | 8           |
+| tribute   | balance | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar | infinite  | 9           |
+|           |
 
 Sample run
 ```bash
 ./count.sh sites.csv
 ```
 
-| Thing#1        | Thing #2 | Thing Three | URL                                                     |            | blerf       | woog      | HTTP_STATUS | Thing_four |
-| -------------- | -------- | ----------- | ------------------------------------------------------- | ---------- | ----------- | --------- | ----------- | ---------- |
-| tribute        | balance  | population  | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar |            | needle      | effective | 503         | infinite   |
-| encourage      | egg      | slump       | https://www.google.ca/                                  | first      |             | urgency   | 200         | connection |
-| hammer         | slant    | tell        | https://www.google.ca/                                  | regulation | tumble      | premature | 200         | elbow      |
-| adventure      | lily     | personality | https://www.google.ca/ (duplicate!)                     | pour       | proud       | lamb      | 200         | threaten   |
-| free           | traffic  | float       | \\\things.yup.blorg.idir.yup                            | muscle     | gate        | carry     | Excluded    | butterfly  |
-| reckless       | read     | transparent | ftp://watermelon                                        | prison     | photography | owe       | Excluded    | conscious  |
-| sphere         | appear   | hostile     | eato.burrito (this is not a thing)                      | oh         | garbage     | reform    | Unavailable | gradient   |
-| breast         | horn     | frequency   | blerf.blorf                                             | brink      | shaft       | award     | Unavailable | lawyer     |
-| landowner      | suite    | gift        | https://www.facebook.com/marketplace                    | kid        | hip         | accept    | 200         | album      |
-| hypothesis     |          | clerk       | https://thepooter.com/                                  | tragedy    | retain      | decrease  | 200         | reduction  |
-| umbrella       | leaf     | mislead     | https://thepooter.com/                                  | conviction | wrap        | position  | 200         | reflection |
-| sweet          | bike     | authority   | https://github.com/bcgov/site-status-checker            | beg        | alive       | seem      | 200         | margin     |
+| Won            | Too     | URL                                                     | Fore      | HTTP_STATUS |
+| -------------- | ------- | ------------------------------------------------------- | --------- | ----------- |
+| sweet          | bike    | https://github.com/bcgov/site-status-checker            | margin    | 200         |
+| encourage      | egg     | https://www.google.ca/                                  |           | 200         |
+| adventure      | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 200         |
+|                | traffic | \\things.yup.blorg.idir.yup                             | butterfly | Excluded    |
+| reckless       | read    | ftp://watermelon                                        | conscious | Excluded    |
+| sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  | Unavailable |
+| landowner      | suite   | https://www.facebook.com/marketplace                    | album     | 200         |
+| free           |         | https://farts.com/ (redirects to thepooter.com)         | reduction | 200         |
+| tribute        | balance | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar | infinite  | 405         |
 |                |
-| 13 in / 13 out |
+| 10 in / 10 out |
 
 Sample run specifying a header that is not already present.
 
 ```bash
-./count.sh sites.csv
+HEADER_OUT=NEW ./count.sh sites.csv
 ```
 
-| Thing#1        | Thing #2 | Thing Three | URL                                                     |            | blerf       | woog      | HTTP_STATUS    | Thing_four | CODEASUS    |
-| -------------- | -------- | ----------- | ------------------------------------------------------- | ---------- | ----------- | --------- | -------------- | ---------- | ----------- |
-| tribute        | balance  | population  | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar |            | needle      | effective | response       | infinite   | 503         |
-| encourage      | egg      | slump       | https://www.google.ca/                                  | first      |             | urgency   | decorative     | connection | 200         |
-| hammer         | slant    | tell        | https://www.google.ca/                                  | regulation | tumble      | premature | goalkeeper     | elbow      | 200         |
-| adventure      | lily     | personality | https://www.google.ca/ (duplicate!)                     | pour       | proud       | lamb      | !@#$%!!http:// | threaten   | 200         |
-| free           | traffic  | float       | \\\things.yup.blorg.idir.yup                            | muscle     | gate        | carry     | hover          | butterfly  | Excluded    |
-| reckless       | read     | transparent | ftp://watermelon                                        | prison     | photography | owe       | barrier        | conscious  | Excluded    |
-| sphere         | appear   | hostile     | eato.burrito (this is not a thing)                      | oh         | garbage     | reform    | dressing       | gradient   | Unavailable |
-| breast         | horn     | frequency   | blerf.blorf                                             | brink      | shaft       | award     | agriculture    | lawyer     | Unavailable |
-| landowner      | suite    | gift        | https://www.facebook.com/marketplace                    | kid        | hip         | accept    | leg            | album      | 200         |
-| hypothesis     |          | clerk       | https://thepooter.com/                                  | tragedy    | retain      | decrease  | verdict        | reduction  | 200         |
-| umbrella       | leaf     | mislead     | https://thepooter.com/                                  | conviction | wrap        | position  | shatter        | reflection | 200         |
-| sweet          | bike     | authority   | https://github.com/bcgov/site-status-checker            | beg        | alive       | seem      | ratio          | margin     | 200         |
+| Won            | Too     | URL                                                     | Fore      | HTTP_STATUS | NEW         |
+| -------------- | ------- | ------------------------------------------------------- | --------- | ----------- | ----------- |
+| sweet          | bike    | https://github.com/bcgov/site-status-checker            | margin    | 1           | 200         |
+| encourage      | egg     | https://www.google.ca/                                  |           | 2           | 200         |
+| adventure      | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 3           | 200         |
+|                | traffic | \\things.yup.blorg.idir.yup                             | butterfly | 4           | Excluded    |
+| reckless       | read    | ftp://watermelon                                        | conscious | 5           | Excluded    |
+| sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  |             | Unavailable |
+| landowner      | suite   | https://www.facebook.com/marketplace                    | album     | 7           | 200         |
+| free           |         | https://farts.com/ (redirects to thepooter.com)         | reduction | 8           | 200         |
+| tribute        | balance | www.amazon.ca/dp/B06XR8LS2L?keywords=parrot&pirate=yaar | infinite  | 9           | 503         |
 |                |
-| 13 in / 13 out |
-
+| 10 in / 10 out |
 
 ## Contributing
 
