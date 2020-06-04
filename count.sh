@@ -45,7 +45,7 @@ url_cleaner() {
         -e 's/[ ,\(?#\/].*$//g'
 }
 
-# Return HTTP status code, Excluded (ftp://, \\) or Unavailable (timeout, error)
+# Return HTTP status code, Excluded (ftp://, \\) or No Response (timeout, error)
 #   fn string
 #
 curl_runner() {
@@ -53,7 +53,7 @@ curl_runner() {
     case "${CURL_URL}" in
     "") echo "Excluded" ;;
     *) curl -ILm "${TIMEOUT}" -s "${CURL_URL}" -k | grep 'HTTP' | grep -Eo '[0-9]{3}' | tail -1 ||
-        echo "Unavailable" ;;
+        echo "No Response" ;;
     esac
 }
 
