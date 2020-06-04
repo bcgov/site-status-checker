@@ -70,17 +70,33 @@ Any combination of those variables can be specified.
 VERBOSE=true TIMEOUT=30 HEADER_IN=URL HEADER_OUT=HTTP_STATUS ./count.sh sites.csv
 ```
 
-### Understanding Output
+## Understanding Output
 
-Empty addresses and those containing `ftp://` or `\\` will be labeled `Excluded`.
+### Excluded
+
+Empty and filtered out addresses will be labeled `Excluded`.
+
+FTP sites and local file shares cannot be used.  E.g. `ftp://` or `\\`.
+
+### Unavailable
 
 Addresses that do not receive a response will be labeled `Unavailable`.
 
-Otherwise HTTP response codes will be provided. `200`-codes indicate success.
+This may mean that the address is wrong, has been moved without providing a redirect or is down.
 
-Any other codes may be generalized as an error.  Redirections are handled silently.
+### HTTP Codes
 
-Please see this [Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) article for a brief overview of HTTP status codes.
+Sites that do respond will be checked for HTTP codes.
+
+`200`-codes indicate success.  Any other codes may be generalized as an error.
+
+`300` codes are redirections, which are handled silently, reporting only final results.
+
+`400`-codes indicate client errors.
+
+`500`-codes indicate server errors.
+
+Please see this [Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) for an overview.
 
 ## Sample data
 
