@@ -212,3 +212,11 @@ Of course, please test thoroughly using `sites.csv` and any other CSV data.
 ## Security concerns
 
 Please be aware it is unsafe to provide confidential data to an online tool.
+
+<!-- Badge Images, linked at top -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/bcgov/site-status-checker.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/bcgov/site-status-checker.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/bcgov/site-status-checker.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/bcgov/site-status-checker.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/bcgov/site-status-checker.svg?style=for-the-badge
