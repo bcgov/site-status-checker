@@ -1,13 +1,9 @@
-<!-- Badges. -->
-
-[![Contributors][contributors-shield]](/../../graphs/contributors)
-[![Forks][forks-shield]](/../../network/members)
-[![Stargazers][stars-shield]](/../../stargazers)
-[![Issues][issues-shield]](/../../issues)
-[![MIT License][license-shield]](/LICENSE)
-[![lifecycle-shield]](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
-
-<!-- Links at bottom of document -->
+[![](https://img.shields.io/github/contributors/bcgov/site-status-checker.svg?style=for-the-badge)](/../../graphs/contributors)
+[![](https://img.shields.io/github/forks/bcgov/site-status-checker.svg?style=for-the-badge)](/../../network/members)
+[![](https://img.shields.io/github/stars/bcgov/site-status-checker.svg?style=for-the-badge)](/../../stargazers)
+[![](https://img.shields.io/github/issues/bcgov/site-status-checker.svg?style=for-the-badge)](/../../issues)
+[![](https://img.shields.io/github/license/bcgov/site-status-checker.svg?style=for-the-badge)](/LICENSE)
+[![](https://img.shields.io/badge/Lifecycle-Stable-97ca00?style=for-the-badge)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 # Site Status Checker
 
@@ -217,12 +213,3 @@ Of course, please test thoroughly using `sites.csv` and any other CSV data.
 ## Security concerns
 
 Please be aware it is unsafe to provide confidential data to an online tool.
-
-<!-- Badge Images, linked at top -->
-
-[contributors-shield]: https://img.shields.io/github/contributors/bcgov/site-status-checker.svg?style=for-the-badge
-[forks-shield]: https://img.shields.io/github/forks/bcgov/site-status-checker.svg?style=for-the-badge
-[stars-shield]: https://img.shields.io/github/stars/bcgov/site-status-checker.svg?style=for-the-badge
-[issues-shield]: https://img.shields.io/github/issues/bcgov/site-status-checker.svg?style=for-the-badge
-[license-shield]: https://img.shields.io/github/license/bcgov/site-status-checker.svg?style=for-the-badge
-[lifecycle-shield]: https://img.shields.io/badge/Lifecycle-Stable-97ca00?style=for-the-badge
