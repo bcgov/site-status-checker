@@ -1,9 +1,13 @@
+<!-- Badges. -->
+
 [![Contributors][contributors-shield]](/../../graphs/contributors)
 [![Forks][forks-shield]](/../../network/members)
 [![Stargazers][stars-shield]](/../../stargazers)
 [![Issues][issues-shield]](/../../issues)
 [![MIT License][license-shield]](/LICENSE)
-![lifecycle-shield]
+[![lifecycle-shield]](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+
+<!-- Links at bottom of document -->
 
 # Site Status Checker
 
@@ -221,4 +225,4 @@ Please be aware it is unsafe to provide confidential data to an online tool.
 [stars-shield]: https://img.shields.io/github/stars/bcgov/site-status-checker.svg?style=for-the-badge
 [issues-shield]: https://img.shields.io/github/issues/bcgov/site-status-checker.svg?style=for-the-badge
 [license-shield]: https://img.shields.io/github/license/bcgov/site-status-checker.svg?style=for-the-badge
-[lifecycle-shield]: https://img.shields.io/badge/Lifecycle-Stable-97ca00
+[lifecycle-shield]: https://img.shields.io/badge/Lifecycle-Stable-97ca00?style=for-the-badge
