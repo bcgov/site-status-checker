@@ -1,12 +1,18 @@
+[![Contributors][contributors-shield]](/../../graphs/contributors)
+[![Forks][forks-shield]](/../../network/members)
+[![Stargazers][stars-shield]](/../../stargazers)
+[![Issues][issues-shield]](/../../issues)
+[![MIT License][license-shield]](/LICENSE)
+
 # Site Status Checker
 
-Reads web addresses from a CSV file and uses curl to record their HTTP status codes.  Results are provided in a modified version of the original CSV file.  Created and tested on Fedora 32 Linux.
+Reads web addresses from a CSV file and uses curl to record their HTTP status codes. Results are provided in a modified version of the original CSV file. Created and tested on Fedora 32 Linux.
 
 ## Usage
 
 ### Installation
 
-There is no installation.  The script can be cloned or copied.  If copied, make sure the new file is executable.
+There is no installation. The script can be cloned or copied. If copied, make sure the new file is executable.
 
 Clone method.
 
@@ -27,7 +33,7 @@ chmod +x count.sh
 Run the script without parameters for basic help.
 
 ```bash
-./count.sh 
+./count.sh
 
    Reads a CSV file of websites (header=URL) and outputs their statuses (header=HTTP_STATUS)
 
@@ -37,7 +43,7 @@ Run the script without parameters for basic help.
 Required: Consume an input file with the first parameter.
 
 ```bash
-./count.sh sites.csv 
+./count.sh sites.csv
 ```
 
 Optional: Change the default file output from `results.csv` with the second parameter.
@@ -48,7 +54,7 @@ Optional: Change the default file output from `results.csv` with the second para
 
 ### Input and Output Files
 
-A CSV (comma separated value) is expected.  Call the input column header `URL`.  A second CSV file is created with the same content, but adding results under the `HTTP_STATUS` column.  If not present, the column will be created.
+A CSV (comma separated value) is expected. Call the input column header `URL`. A second CSV file is created with the same content, but adding results under the `HTTP_STATUS` column. If not present, the column will be created.
 
 `URL` is the default input header.
 
@@ -71,7 +77,7 @@ TIMEOUT=30 ./count.sh sites.csv
 A verbose mode is provided for troubleshooting.
 
 ```bash
-VERBOSE=true ./count.sh sites.csv 
+VERBOSE=true ./count.sh sites.csv
 ```
 
 Any combination of variables and optional parameters can be specified.
@@ -86,7 +92,7 @@ VERBOSE=true TIMEOUT=30 HEADER_IN=URL HEADER_OUT=HTTP_STATUS ./count.sh sites.cs
 
 Empty and filtered out addresses will be labeled `Excluded`.
 
-FTP sites and local file shares cannot be used.  E.g. `ftp://` or `\\`.
+FTP sites and local file shares cannot be used. E.g. `ftp://` or `\\`.
 
 ### No Response
 
@@ -96,24 +102,23 @@ This may mean that the address is wrong, has been moved without providing a redi
 
 ### HTTP Codes
 
-Sites that do respond will receive HTTP status codes.  Please see Wikipedia for a [List of HTTP status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes).
-
+Sites that do respond will receive HTTP status codes. Please see Wikipedia for a [List of HTTP status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes).
 
 #### 200 - Success Codes
 
-`200`-codes indicate success.  Any other codes may be generalized as an error.
+`200`-codes indicate success. Any other codes may be generalized as an error.
 
 #### 400 and 500 - Error Codes
 
-`400`-codes indicate client errors.  They are usually related to rights or incorrect addresses.
+`400`-codes indicate client errors. They are usually related to rights or incorrect addresses.
 
-`500`-codes indicate server errors.  The site could be down, overloaded, timing out otherwise unavailable.
+`500`-codes indicate server errors. The site could be down, overloaded, timing out otherwise unavailable.
 
 #### 100 and 300 - Unreported Codes
 
-`100`-codes are informational.  These will not be reported.
+`100`-codes are informational. These will not be reported.
 
-`300` codes are redirections.  The will be silently followed, resulting in 200, 400 or 500 codes.
+`300` codes are redirections. The will be silently followed, resulting in 200, 400 or 500 codes.
 
 ## Sample data
 
@@ -124,7 +129,7 @@ Sample data.
 | sweet     | bike    | https://github.com/bcgov/site-status-checker            | margin    | 1           |
 | encourage | egg     | https://www.google.ca/                                  |           | 2           |
 | adventure | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 3           |
-|           | traffic | \\\things.yup.blorg.idir.yup                             | butterfly | 4           |
+|           | traffic | \\\things.yup.blorg.idir.yup                            | butterfly | 4           |
 | reckless  | read    | ftp://watermelon                                        | conscious | 5           |
 | sphere    | appear  | eato.burrito (this is not a thing)                      | gradient  |             |
 | landowner | suite   | https://www.facebook.com/marketplace                    | album     | 7           |
@@ -143,7 +148,7 @@ Sample run.
 | sweet          | bike    | https://github.com/bcgov/site-status-checker            | margin    | 200         |
 | encourage      | egg     | https://www.google.ca/                                  |           | 200         |
 | adventure      | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 200         |
-|                | traffic | \\\things.yup.blorg.idir.yup                             | butterfly | Excluded    |
+|                | traffic | \\\things.yup.blorg.idir.yup                            | butterfly | Excluded    |
 | reckless       | read    | ftp://watermelon                                        | conscious | Excluded    |
 | sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  | No Response |
 | landowner      | suite   | https://www.facebook.com/marketplace                    | album     | 200         |
@@ -163,7 +168,7 @@ HEADER_OUT=NEW ./count.sh sites.csv
 | sweet          | bike    | https://github.com/bcgov/site-status-checker            | margin    | 1           | 200         |
 | encourage      | egg     | https://www.google.ca/                                  |           | 2           | 200         |
 | adventure      | lily    | https://www.google.ca/ (duplicate!)                     | threaten  | 3           | 200         |
-|                | traffic | \\\things.yup.blorg.idir.yup                             | butterfly | 4           | Excluded    |
+|                | traffic | \\\things.yup.blorg.idir.yup                            | butterfly | 4           | Excluded    |
 | reckless       | read    | ftp://watermelon                                        | conscious | 5           | Excluded    |
 | sphere         | appear  | eato.burrito (this is not a thing)                      | gradient  |             | No Response |
 | landowner      | suite   | https://www.facebook.com/marketplace                    | album     | 7           | 200         |
@@ -196,7 +201,7 @@ Please request features or issue corrections by submitting [issues](https://gith
 
 ### Pull Requests
 
-[Pull requests](https://github.com/bcgov/site-status-checker/pulls) are even better!  Contributions will be squashed on merge after review and acceptance.  Providing adequate description of changes makes this much easier.
+[Pull requests](https://github.com/bcgov/site-status-checker/pulls) are even better! Contributions will be squashed on merge after review and acceptance. Providing adequate description of changes makes this much easier.
 
 Of course, please test thoroughly using `sites.csv` and any other CSV data.
 
