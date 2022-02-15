@@ -3,7 +3,7 @@
 [![](https://img.shields.io/github/stars/bcgov/site-status-checker.svg?style=for-the-badge)](/../../stargazers)
 [![](https://img.shields.io/github/issues/bcgov/site-status-checker.svg?style=for-the-badge)](/../../issues)
 [![](https://img.shields.io/github/license/bcgov/site-status-checker.svg?style=for-the-badge)](/LICENSE)
-[![](https://img.shields.io/badge/Lifecycle-Stable-97ca00?style=for-the-badge)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+[![](https://img.shields.io/badge/Lifecycle-Dormant-ff7f2a?style=for-the-badge)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 # Site Status Checker
 
